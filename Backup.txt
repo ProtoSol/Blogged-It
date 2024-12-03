@@ -1,0 +1,5 @@
+To Run the Virtual Environment
+.venv\Scripts\activate
+
+Need to work on the sending of emails
+video 10 / 15

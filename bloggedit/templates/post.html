@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+<article class="media content-section" style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px;">
+  <!-- Profile picture on the left -->
+  <div style="flex-shrink: 0;">
+    <img class="rounded-circle article-img" 
+         src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" 
+         style="width: 60px; height: 60px;">
+  </div>
+  
+  <!-- Content on the right -->
+  <div class="media-body">
+    <div style="margin-bottom: 10px;">
+      <!-- Username and date inline -->
+      <span style="font-weight: bold; text-decoration: none; display: inline-block;">
+        <a href="{{url_for('user_posts', username=post.author.username)}}" style="color-inherit; font-weight: bold; text-decoration: none; display: block;">
+          {{ post.author.username }}
+        </a>
+      </span>
+      <span style="font-size: 0.9em; color: #6c757d; margin-left: 10px;">{{ post.date_posted.strftime('%d-%m-%Y') }}</span>
+      {% if post.author == current_user %}
+        <div>
+          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+          <!-- Modal trigger button with proper Bootstrap 5 attributes -->
+          <button type="button" class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>
+      {% endif %}
+    </div>
+    <!-- Post title below the username and date -->
+    <h2 class="article-title">{{ post.title }}</h2>
+    <!-- Horizontal line below the username and date -->
+    <hr style="border: none; border-top: 1px solid #dee2e6; margin: 10px 0;">
+    <!-- Post content -->
+    <p class="article-content">{{ post.content }}</p>
+  </div>
+</article>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this post?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
